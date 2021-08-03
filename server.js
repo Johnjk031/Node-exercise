@@ -1,19 +1,23 @@
 let http = require('http')
 const fs = require('fs')
 const port = 1010
+var express = require('express');
+var path = require('path');
+const server = express()
 
-const server = http.createServer(function(req, res) {
-    res.writeHead(200, {'Content-Type' : 'text/html' })
-    fs.readFile('index.html', function(error, data){
-        if (error) {
-            res.writeHead(400)
-            res.write('Could not find file')
-        } else {
-            res.write(data)
-        }
-      res.end()
-    })
+server.use(express.static('public'));
+server.use('/css', express.static(__dirname + 'public/css'))
+server.use('/js', express.static(__dirname + 'public/js'))
+
+server.set ('views', './views')
+server.set('view engine', 'ejs')
+
+server.get('', (req, res) => {
+    res.render('index')
 })
+
+
+
 
 server.listen(port, function(error) {
     if (error) {
